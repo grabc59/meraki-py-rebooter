@@ -1,6 +1,8 @@
 # network-wide reboot tool
 
 # To Do:
+# Next, write reboot post call
+
 # add a way to save the api key rather than entering it every time the application is run
 # fix network list display so it's more readable
 # write my own calls instead of meraki py since those methods print
@@ -14,6 +16,8 @@ import requests
 
 # get API key
 apikey = input(f'-> Enter your API key: ')
+
+base_url = 'https://api.meraki.com/api/v0'
 
 # find orgs accessible by this API key
 myOrgs = meraki.myorgaccess(apikey)
@@ -56,5 +60,30 @@ reboot_confirmation = input(f'Reboot devices now? (y/n) ')
 # reboot API call:
 # POST/networks/{networkId}/devices/{serial}/reboot
 if reboot_confirmation == 'y':
+    headers = {
+        'x-cisco-meraki-api-key': format(str(apikey)), 'Content-Type': 'application/json'}
     for device in network_devices:
-        r = requests.post('https://httpbin.org/post', data={'key': 'value'})
+        posturl = '{0}/networks/{1}/devices/{2}/reboot'.format(
+            str(base_url), str(network_id), str(device["serial"]))
+        r = requests.post(posturl, headers=headers)
+        # dashboard = requests.post(posturl, headers=headers)
+        print(r)
+        print(r.text)
+
+# Remove a single device
+# https://api.meraki.com/api_docs#remove-a-single-device
+# def removedevfromnet(apikey, networkid, serial, suppressprint=False):
+#     calltype = 'Device'
+#     posturl = '{0}/networks/{1}/devices/{2}/remove'.format(
+#         str(base_url), str(networkid), str(serial))
+#     headers = {
+#         'x-cisco-meraki-api-key': format(str(apikey)),
+#         'Content-Type': 'application/json'
+#     }
+#     dashboard = requests.post(posturl, headers=headers)
+#     #
+#     # Call return handler function to parse Dashboard response
+#     #
+#     result = __returnhandler(
+#         dashboard.status_code, dashboard.text, calltype, suppressprint)
+#     return result
