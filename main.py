@@ -11,8 +11,6 @@ from prettytable import PrettyTable
 from meraki import meraki
 import json
 
-# apikey = "fda920e4d397e632a263054ba0e5f405c48ee1f5"
-
 # get API key
 apikey = input(f'-> Enter your API key: ')
 base_url = 'https://api.meraki.com/api/v0'
